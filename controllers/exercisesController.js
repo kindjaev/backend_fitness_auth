@@ -30,6 +30,8 @@ export const specificExercise = async (req, res) => {
         const exerciseDbUrl = 'https://exercisedb.p.rapidapi.com/exercises/exercise/'
         const youtubeSearchUrl = 'https://youtube-search-and-download.p.rapidapi.com/search?query='
         const exerciseSimilarDbUrl = 'https://exercisedb.p.rapidapi.com/exercises'
+
+        const exerciseImgURL =  'https://exercisedb.p.rapidapi.com/image?resolution=360&exerciseId=';
     
         const exerciseOptions = {
             method: 'GET',
@@ -48,7 +50,9 @@ export const specificExercise = async (req, res) => {
         };
     
         const exercisesData = await fetch(exerciseDbUrl + id, exerciseOptions)
+        const exercisesDataImg = await fetch(exerciseImgURL + id, exerciseOptions)
         const exercise = await exercisesData.json()
+        exercise.gifUrl = exercisesDataImg.url
     
         const exercisesSimilarData = await fetch(exerciseSimilarDbUrl, exerciseOptions)
         const similarExercises = await exercisesSimilarData.json()
