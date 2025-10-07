@@ -10,13 +10,24 @@ export const exercisesHomePage = async (req, res) => {
                 'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
             }
         };
+
         const exercisesData = await fetch(exerciseApi, exerciseOptions)
         const exercises = await exercisesData.json()
+
+        const apiKey = process.env.VITE_YOUTUBE_OPTIONS_KEY; 
+        const resolution = "360"; 
+        const exercisesWithImages = exercises.map(ex => {
+            return {
+                ...ex,
+                gifUrl: `https://exercisedb.p.rapidapi.com/image?exerciseId=${ex.id}&resolution=${resolution}&rapidapi-key=${apiKey}`
+            }
+        });
+
     
         const exercisesBodyPartsData = await fetch(`${exerciseApi}/bodyPartList`, exerciseOptions)
         const exercisesBodyPartsList = await exercisesBodyPartsData.json()
         // if(exercises.message) throw Error("You have exceeded the MONTHLY quota for Requests")
-        const data = {exercises, exercisesBodyPartsList}
+        const data = {exercises: exercisesWithImages, exercisesBodyPartsList}
         res.json(data)
     } catch (error) {
         res.status(404).json({error: error.message})
