@@ -48,12 +48,16 @@ export const specificExercise = async (req, res) => {
                 'X-RapidAPI-Host': 'youtube-search-and-download.p.rapidapi.com'
             }
         };
+
+        const apiKey = process.env.VITE_YOUTUBE_OPTIONS_KEY; 
+        const resolution = "360"; 
+        const imageUrl = `https://exercisedb.p.rapidapi.com/image?exerciseId=${id}&resolution=${resolution}&rapidapi-key=${apiKey}`;
     
         const exercisesData = await fetch(exerciseDbUrl + id, exerciseOptions)
-        const exercisesDataImg = await fetch(exerciseImgURL + id, exerciseOptions)
+        // const exercisesDataImg = await fetch(exerciseImgURL + id, exerciseOptions)
         const exercise = await exercisesData.json()
-        exercise.gifUrl = exercisesDataImg.url
-    
+        exercise.gifUrl = imageUrl;
+
         const exercisesSimilarData = await fetch(exerciseSimilarDbUrl, exerciseOptions)
         const similarExercises = await exercisesSimilarData.json()
     
